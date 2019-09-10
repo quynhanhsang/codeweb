@@ -6,12 +6,99 @@
 	<script src="js/jquery-3.4.1.min.js"></script>
 	<script src="js/angular.min.js"></script>
 </head>
-<body ng-app="Controller">
+<body ng-app="myApp">
+	<div ng-controller="myCtrl as myCtrls">
+		<div>
+			<button ng-click="add()" ng-show=" show ">Add</button>
+			<button ng-click="save()" ng-show="!show">Lưu</button>
+			<input type="text" id="name" />
+			<input type="text" id="search" placeholder="tim kiem" ng-model="search" />
+		</div>
+		<table>
+		  <tr>
+		    <th>id</th>
+		    <th>Tên</th>
+		    <th>thao tac</th>
+		  </tr>
+		  <tr ng-repeat="datas in data | filter:search">
+		    <td>{{datas.id}}</td>
+		    <td>{{datas.name}}</td>
+		    <td><a href="javascript:void(0)" ng-click="edit(datas.id)">edit</a></td>
+		  </tr>
+		</table>
 
+	</div>
 	<script>
 		(function(){
 
 
+			var app = angular.module("myApp", []);
+			var data = [
+				{
+					id: 1,
+					name: 'sang'
+				},{
+					id: 2,
+					name: 'sang'
+				},{
+					id: 3,
+					name: 'sang'
+				},{
+					id: 4,
+					name: 'sang'
+				}
+			];
+
+			var id = null ;
+			// Create a Controller named "myCtrl"
+			app.controller("myCtrl", function($scope) {
+				$scope.data = data;
+				$scope.show = true;
+				$scope.edit = function(id){
+					$scope.show = false;
+					objIndex = data.findIndex((obj => obj.id == id));
+					id = data[objIndex].id;
+					$("#name").val(data[objIndex].name);
+				}
+
+				$scope.add = function(){
+					let datacheck = data;
+					let name = $("#name").val();
+					//check input
+
+					if(name === '' || name === null){
+						alert('ban nhap lai ki tu');
+						return false;
+					}
+					let datas = {
+						id: data.length +1,
+						name: name
+					}
+					
+					data.push(datas);
+					
+					$('#name').val("");
+					
+				}
+
+				$scope.save = function(){
+					$scope.show = true;
+					let name = $("#name").val();
+					let datas = {
+						id: data[id].id,
+						name: name
+					}
+
+					console.log(datas);
+					data[id] = datas;
+				
+					$("#name").val("");
+				}
+
+				$scope.delete = function(){
+
+				}
+			});
 		})()	
 	</script>
 
